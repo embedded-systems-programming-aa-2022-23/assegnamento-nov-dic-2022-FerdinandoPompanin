@@ -6,7 +6,7 @@ using std::array;
 using std::cerr;
 #include <cmath>
 using std::sqrt;
-
+using std::pow;
 
 #include "griglia.h"
 //definisco classe cella
@@ -31,8 +31,12 @@ using std::sqrt;
 			for(int j{min_y}; j <= max_y; j++)
 			{
 				Cella posizione(i, j);
-				// inserire controlo per evitare di sovrapporre ostacoli
-				
+				//controlo per evitare di sovrapporre ostacoli
+				if(pos_ostacoli.contains(posizione))
+				{
+					cerr <<"Errore in insericsci_ostacolo(). Sovrapposizione di ostacoli!\n";
+					exit(EXIT_FAILURE);
+				}
 				pos_ostacoli.insert(posizione);
 			}
 		}
@@ -41,7 +45,12 @@ using std::sqrt;
 	
 	void Mappa::inserisci_robot(Cella posizione)
 	{
-		//inserire controllo per evitare di inserire robot in cella già occupata
+		//controllo per evitare di inserire robot in cella già occupata
+		if(pos_ostacoli.contains(posizione)||pos_robot.contains(posizione))
+		{
+			cerr <<"Errore in inserisci_robot(). Stai provando a inserire robot in posizione già occupata!\n";
+			exit(EXIT_FAILURE);
+		}
 		
 		pos_robot.insert(posizione);
 	}
@@ -49,7 +58,12 @@ using std::sqrt;
 	
 	void Mappa::sposta_robot(Cella prima, Cella dopo)
 	{
-		//inserire controllo per evitare di inserire robot in cella già occupata
+		//controllo per evitare di inserire robot in cella già occupata
+		if(pos_ostacoli.contains(dopo)||pos_robot.contains(dopo))
+		{
+			cerr <<"Errore in sposta_robot(). Stai provando a inserire robot in posizione già occupata!\n";
+			exit(EXIT_FAILURE);
+		}
 		
 		pos_robot.erase(prima);
 		pos_robot.insert(dopo);
@@ -80,7 +94,7 @@ using std::sqrt;
 	
 	float distanza_euclidea(const Cella pos_1, const Cella pos_2)
 	{
-		float distanza = sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2));
+		float distanza = sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2))*DIM_CELLA;
 		return distanza;
 	}
 	
