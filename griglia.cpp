@@ -1,0 +1,99 @@
+//griglia.cpp
+
+#include <array>
+using std::array;
+#include <iostream>
+using std::cerr;
+#include <cmath>
+using std::sqrt;
+
+
+#include "griglia.h"
+//definisco classe cella
+
+	Cella::Cella(int pos_x, int pos_y)
+		:x_{pos_x},
+		 y_{pos_y}
+		 {}
+	
+	array<int,2> Cella::pos() const
+	{
+		array<int,2> posizione{x_, y_};
+		return posizione;
+	}
+
+//definisco classe mappa
+	//inserisco TUTTO l'ostacolo, si potrebbe anche inserire solo il contorno per risparmiare, pensaci in seguito
+	void Mappa::inserisci_ostacolo(int min_x, int min_y, int max_x, int max_y)
+	{
+		for(int i{min_x}; i <= max_x; i++)
+		{
+			for(int j{min_y}; j <= max_y; j++)
+			{
+				Cella posizione(i, j);
+				// inserire controlo per evitare di sovrapporre ostacoli
+				
+				pos_ostacoli.insert(posizione);
+			}
+		}
+	}
+	
+	
+	void Mappa::inserisci_robot(Cella posizione)
+	{
+		//inserire controllo per evitare di inserire robot in cella già occupata
+		
+		pos_robot.insert(posizione);
+	}
+	
+	
+	void Mappa::sposta_robot(Cella prima, Cella dopo)
+	{
+		//inserire controllo per evitare di inserire robot in cella già occupata
+		
+		pos_robot.erase(prima);
+		pos_robot.insert(dopo);
+	}
+	
+	
+	float Mappa::distanza_cella_vicina(Cella cercata)
+	{
+		float distanza_min = distanza_euclidea(cercata, *pos_ostacoli.cbegin());
+		
+		for(auto pos_corr = pos_ostacoli.begin(); pos_corr != pos_ostacoli.end(); pos_corr++)
+		{
+			float distanza = distanza_euclidea(cercata, *pos_corr);
+			if(distanza < distanza_min)
+				distanza_min = distanza;
+		}
+		
+		for(auto pos_corr{pos_robot.begin()}; pos_corr != pos_robot.end(); pos_corr++)
+		{
+			float distanza = distanza_euclidea(cercata, *pos_corr);
+			if(distanza < distanza_min)
+				distanza_min = distanza;
+		}
+		
+		return distanza_min;
+	}
+	
+	
+	float distanza_euclidea(const Cella pos_1, const Cella pos_2)
+	{
+		float distanza = sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2));
+		return distanza;
+	}
+	
+	bool operator==(const Cella& c1, const Cella& c2)
+	{
+		return ((c1.pos())[0]==(c2.pos())[0])&&((c1.pos())[1]==(c2.pos())[1]);
+	}
+
+
+	bool operator<(const Cella& c1, const Cella& c2)
+	{
+		return ((((c1.pos())[0]==(c2.pos())[0])&&((c1.pos())[1]<(c2.pos())[1]))||((c1.pos())[0]<(c2.pos())[0]));
+		
+	}
+
+
