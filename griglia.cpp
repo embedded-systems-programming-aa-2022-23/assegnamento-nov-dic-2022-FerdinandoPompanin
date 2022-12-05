@@ -23,12 +23,31 @@ using std::pow;
 	}
 
 //definisco classe mappa
-	//inserisco TUTTO l'ostacolo, si potrebbe anche inserire solo il contorno per risparmiare, pensaci in seguito
-	void Mappa::inserisci_ostacolo(int min_x, int min_y, int max_x, int max_y)
+	Mappa::Mappa(float dimensione)
+		:dim_{dimensione}
+		{}
+
+	float Mappa::dim_cella()
 	{
-		for(int i{min_x}; i <= max_x; i++)
+		return dim_;
+	}
+
+	Cella Mappa::crea_cella(float pos_x, float pos_y)
+	{
+		int x = static_cast<int>(pos_x/dim_);
+		int y = static_cast<int>(pos_y/dim_);
+		
+		Cella my_cella(x, y);
+		
+		return my_cella;
+	}
+
+	//inserisco TUTTO l'ostacolo, si potrebbe anche inserire solo il contorno per risparmiare, pensaci in seguito
+	void Mappa::inserisci_ostacolo(Cella min, Cella max)
+	{
+		for(int i{(min.pos())[0]}; i <= (max.pos())[0]; i++)
 		{
-			for(int j{min_y}; j <= max_y; j++)
+			for(int j{(min.pos())[1]}; j <= (max.pos())[1]; j++)
 			{
 				Cella posizione(i, j);
 				//controlo per evitare di sovrapporre ostacoli
@@ -92,7 +111,7 @@ using std::pow;
 	}
 	
 	
-	float distanza_euclidea(const Cella pos_1, const Cella pos_2)
+	float distanza_euclidea(const Cella pos_1, const Cella pos_2)//non serve per forza tenere conto delle dimensioni della cella...
 	{
 		float distanza = sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2))*DIM_CELLA;
 		return distanza;

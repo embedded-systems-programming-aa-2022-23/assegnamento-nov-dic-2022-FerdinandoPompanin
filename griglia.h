@@ -23,7 +23,11 @@ private:
 	
 class Mappa {
 public:
-	void inserisci_ostacolo(int min_x, int min_y, int max_x, int max_y); //inserimento di ostacolo definito come da specifiche, si può implementare con array o cella
+	Mappa(float dimensione);
+
+	float dim_cella();
+	Cella crea_cella(float pos_x, float pos_y); //serve a creare delle posizioni Celle  partendo da coordinate cartesiane float
+	void inserisci_ostacolo(Cella min, Cella max); //inserimento di ostacolo definito come da specifiche, si può implementare con array o cella
 	void inserisci_robot(Cella posizione);
 	void sposta_robot(Cella prima, Cella dopo);
 	float distanza_cella_vicina(Cella cercata); //ritorna il valore della distanza euclidea tra la cella inserita e l'ostacolo-robot più vicino
@@ -31,6 +35,7 @@ public:
 private:
 	std::set<Cella> pos_ostacoli;
 	std::set<Cella> pos_robot;
+	float dim_;
 };
 
 float distanza_euclidea(const Cella pos_1, const Cella pos_2);

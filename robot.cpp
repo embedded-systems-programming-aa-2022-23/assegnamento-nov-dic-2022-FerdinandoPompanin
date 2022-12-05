@@ -56,6 +56,9 @@ using std::pow;
 				
 			}
 		}
+		//aggiorno il "registro" delle posizioni dei robot nella mappa
+		my_map.sposta_robot(pos_, prox_cella);
+		
 		//trovata la cella a potenziale minore, cambia la cella		
 		Robot::cambia_pos(prox_cella);
 	}
