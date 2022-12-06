@@ -4,6 +4,8 @@
 using std::array;
 #include <iostream>
 using std::cerr;
+using std::cout;
+using std::endl;
 #include <cmath>
 using std::sqrt;
 using std::pow;
@@ -37,6 +39,11 @@ using std::pow;
 		int x = static_cast<int>(pos_x/dim_);
 		int y = static_cast<int>(pos_y/dim_);
 		
+		if(pos_x<0)
+			x--;
+		if(pos_y<0)
+			y--;
+		
 		Cella my_cella(x, y);
 		
 		return my_cella;
@@ -45,6 +52,7 @@ using std::pow;
 	//inserisco TUTTO l'ostacolo, si potrebbe anche inserire solo il contorno per risparmiare, pensaci in seguito
 	void Mappa::inserisci_ostacolo(Cella min, Cella max)
 	{
+		//inserire controllo dati in ingresso
 		for(int i{(min.pos())[0]}; i <= (max.pos())[0]; i++)
 		{
 			for(int j{(min.pos())[1]}; j <= (max.pos())[1]; j++)
@@ -91,7 +99,14 @@ using std::pow;
 	
 	float Mappa::distanza_cella_vicina(Cella cercata)
 	{
-		float distanza_min = distanza_euclidea(cercata, *pos_ostacoli.cbegin());
+	
+		float distanza_min;
+		
+		if(pos_ostacoli.size() != 0){
+			distanza_min = distanza_euclidea(cercata, *pos_ostacoli.cbegin());
+		}else{
+			distanza_min = distanza_euclidea(cercata, *pos_robot.cbegin());
+		}
 		
 		for(auto pos_corr = pos_ostacoli.begin(); pos_corr != pos_ostacoli.end(); pos_corr++)
 		{
@@ -110,6 +125,26 @@ using std::pow;
 		return distanza_min;
 	}
 	
+	//utile unicamente al testing sta funzione
+	void Mappa::stampa_mappa()
+	{
+		cout << "Gli ostacoli sono : \n";
+		
+		for(auto it = pos_ostacoli.begin(); it != pos_ostacoli.end(); it++)
+		{
+			cout << *it <<"\n";
+		}
+	
+		cout << "\nI robot occupano : ";
+		
+		for(auto it = pos_robot.begin(); it != pos_robot.end(); it++)
+		{
+			cout << *it << "\n";
+		}
+		
+		
+		cout <<"\nLa dim. delle cella è: "<< dim_<<"\n";
+	}
 	
 	float distanza_euclidea(const Cella pos_1, const Cella pos_2)//non serve per forza tenere conto delle dimensioni della cella...
 	{
@@ -128,5 +163,9 @@ using std::pow;
 		return ((((c1.pos())[0]==(c2.pos())[0])&&((c1.pos())[1]<(c2.pos())[1]))||((c1.pos())[0]<(c2.pos())[0]));
 		
 	}
-
-
+	
+	std::ostream& operator<<(std::ostream& os, const Cella& c)
+	{
+		os << "X: " << (c.pos())[0] << " Y:  " << (c.pos())[1];
+		return os;
+	}

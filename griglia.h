@@ -31,6 +31,7 @@ public:
 	void inserisci_robot(Cella posizione);
 	void sposta_robot(Cella prima, Cella dopo);
 	float distanza_cella_vicina(Cella cercata); //ritorna il valore della distanza euclidea tra la cella inserita e l'ostacolo-robot più vicino
+	void stampa_mappa();
 	
 private:
 	std::set<Cella> pos_ostacoli;
@@ -43,5 +44,7 @@ float distanza_euclidea(const Cella pos_1, const Cella pos_2);
 bool operator==(const Cella& c1, const Cella& c2);
 
 bool operator<(const Cella& c1, const Cella& c2);
+
+std::ostream& operator<<(std::ostream& os, const Cella& c);
 
 #endif
