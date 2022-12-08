@@ -96,11 +96,11 @@ using std::pow;
 	{	
 		float potenziale;
 		//calcolo potenziale repulsivo
-		if(distanza<DIST_MAX)
+		if(distanza>DIST_MAX || distanza==0)
 		{
-			potenziale = 0.5*COEF_REPULSIVO*pow((1/distanza)-(1/DIST_MAX),2);
-		}else{
 			potenziale = 0;
+		}else{
+			potenziale = 0.5*COEF_REPULSIVO*pow((1/distanza)-(1/DIST_MAX),2);
 		}
 		//calcolo potenziale attrattivo
 		potenziale = potenziale + 0.5*COEF_ATTRATTIVO*pow(distanza_euclidea(my_pos, goal_, map_.dim_cella()),2);
@@ -108,4 +108,8 @@ using std::pow;
 		return potenziale;
 	}
 	
-	
+	std::ostream& operator<<(std::ostream& os, Robot& r)
+	{
+		os << "Mio robot: "<< " posizione: " << r.valore_pos();
+		return os;
+	}

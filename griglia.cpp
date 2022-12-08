@@ -99,7 +99,7 @@ using std::pow;
 	
 	float Mappa::distanza_cella_vicina(Cella cercata)
 	{
-	
+		/*
 		float distanza_min;
 		
 		if(pos_ostacoli.size() != 0){
@@ -120,6 +120,33 @@ using std::pow;
 			float distanza = distanza_euclidea(cercata, *pos_corr, dim_);
 			if(distanza < distanza_min)
 				distanza_min = distanza;
+		}
+		
+		return distanza_min; */
+		
+		float distanza_min;
+		
+		if(pos_ostacoli.size() != 0){
+			distanza_min = distanza_euclidea(cercata, *pos_ostacoli.cbegin(), dim_);
+		}else{
+			distanza_min = distanza_euclidea(cercata, *pos_robot.cbegin(), dim_);
+			if(pos_robot.size()>1 && distanza_min==0)
+				distanza_min = distanza_euclidea(cercata, *(++pos_robot.cbegin()), dim_);
+		}
+		
+		for(auto pos_corr = pos_ostacoli.begin(); pos_corr != pos_ostacoli.end(); pos_corr++)
+		{
+			float distanza = distanza_euclidea(cercata, *pos_corr, dim_);
+			if(distanza < distanza_min)
+				distanza_min = distanza;
+		}
+		
+		for(auto pos_corr{pos_robot.begin()}; pos_corr != pos_robot.end(); pos_corr++)
+		{
+				float distanza = distanza_euclidea(cercata, *pos_corr, dim_);
+				if(distanza < distanza_min)
+					distanza_min = distanza;
+			
 		}
 		
 		return distanza_min;
@@ -167,6 +194,10 @@ using std::pow;
 		return ((c1.pos())[0]==(c2.pos())[0])&&((c1.pos())[1]==(c2.pos())[1]);
 	}
 
+	bool operator!=(const Cella& c1, const Cella& c2)
+	{
+		return !(c1==c2);
+	}
 
 	bool operator<(const Cella& c1, const Cella& c2)
 	{

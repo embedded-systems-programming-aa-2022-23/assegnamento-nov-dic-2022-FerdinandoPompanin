@@ -4,7 +4,7 @@ project( assegnamento_dei_robot
 	 VERSION 0.1
 	 DESCRIPTION "prima parte dell'assegnamento")
 
-add_compile_options(-Wall -Werror -std=c++20)
+add_compile_options(-Wall -Werror -std=c++20 -g)
 
 add_subdirectory(test)
 
