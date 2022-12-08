@@ -10,18 +10,19 @@
 
 class Robot {
 public:
-	Robot(Cella pos, Cella goal);
-	Robot(Cella pos);
+	Robot(Cella pos, Cella goal, Mappa& map);
+	Robot(Cella pos, Mappa& map);
 	
 	void cambia_goal(Cella goal);
 	Cella valore_pos();
 	bool goal_raggiunto(); 
-	void cammina(Mappa& my_map);
+	void cammina();
 
 private:
 	//per ora puntiforme, da aggiungere poi il raggio e tutto quello che ne consegue
 	Cella pos_;
 	Cella goal_;
+	Mappa& map_;
 
 	void cambia_pos(Cella nuova_pos);
 	float calcola_potenziale(Cella my_pos, float distanza);

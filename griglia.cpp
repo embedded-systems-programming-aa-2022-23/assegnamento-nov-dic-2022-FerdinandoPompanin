@@ -103,21 +103,21 @@ using std::pow;
 		float distanza_min;
 		
 		if(pos_ostacoli.size() != 0){
-			distanza_min = distanza_euclidea(cercata, *pos_ostacoli.cbegin());
+			distanza_min = distanza_euclidea(cercata, *pos_ostacoli.cbegin(), dim_);
 		}else{
-			distanza_min = distanza_euclidea(cercata, *pos_robot.cbegin());
+			distanza_min = distanza_euclidea(cercata, *pos_robot.cbegin(), dim_);
 		}
 		
 		for(auto pos_corr = pos_ostacoli.begin(); pos_corr != pos_ostacoli.end(); pos_corr++)
 		{
-			float distanza = distanza_euclidea(cercata, *pos_corr);
+			float distanza = distanza_euclidea(cercata, *pos_corr, dim_);
 			if(distanza < distanza_min)
 				distanza_min = distanza;
 		}
 		
 		for(auto pos_corr{pos_robot.begin()}; pos_corr != pos_robot.end(); pos_corr++)
 		{
-			float distanza = distanza_euclidea(cercata, *pos_corr);
+			float distanza = distanza_euclidea(cercata, *pos_corr, dim_);
 			if(distanza < distanza_min)
 				distanza_min = distanza;
 		}
@@ -146,10 +146,20 @@ using std::pow;
 		cout <<"\nLa dim. delle cella è: "<< dim_<<"\n";
 	}
 	
-	float distanza_euclidea(const Cella pos_1, const Cella pos_2)//non serve per forza tenere conto delle dimensioni della cella...
+	float distanza_euclidea(const Cella pos_1, const Cella pos_2, float dim_cella)
 	{
-		float distanza = sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2))*DIM_CELLA;
+		float distanza = sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2))*dim_cella;
 		return distanza;
+	}
+	
+	bool Mappa::contiene_obs(Cella pos)
+	{
+		return pos_ostacoli.contains(pos);
+	}
+	
+	bool Mappa::contiene_robot(Cella pos)
+	{
+		return pos_robot.contains(pos);
 	}
 	
 	bool operator==(const Cella& c1, const Cella& c2)

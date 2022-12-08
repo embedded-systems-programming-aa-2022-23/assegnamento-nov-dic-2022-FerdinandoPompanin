@@ -8,20 +8,43 @@ using std::pow;
 #include "robot.h"
 
 //definisco classe robot
-	Robot::Robot(Cella pos, Cella goal)
+	Robot::Robot(Cella pos, Cella goal, Mappa& map)
 		:pos_{pos},
-		goal_{goal}
-		{}
+		goal_{goal},
+		map_{map}
+		{
+			if(map.contiene_obs(pos) || map.contiene_robot(pos) || map.contiene_obs(goal))
+			{
+				cerr<<"Errore il Robot::Robot(), stai inserendo robot o goal in posizioni proibite!!\n";
+				exit(EXIT_FAILURE);
+			}
 		
-	Robot::Robot(Cella pos)
+			map.inserisci_robot(pos);
+		}
+		
+	Robot::Robot(Cella pos, Mappa& map)
 		:pos_{pos},
-		goal_{pos} //scelgo di mettere di default il goal nella posizione in cui si trova il robot, così se non ha un vero da raggiungere goal, risulta "non impegnato"
-		{}
+		goal_{pos}, //scelgo di mettere di default il goal nella posizione in cui si trova il robot, così se non ha un vero da raggiungere goal, risulta "non impegnato"
+		map_{map}
+		{
+			if(map.contiene_obs(pos) || map.contiene_obs(pos))
+			{
+				cerr<<"Errore il Robot::Robot(), stai inserendo robot o goal in posizioni proibite!!\n";
+				exit(EXIT_FAILURE);
+			}
+		
+			map.inserisci_robot(pos);
+		}
 	
 	
 	void Robot::cambia_goal(Cella goal)
 	{
-		//non viene fatto alcun controllo se il goal è raggiungibile o meno, bisognerà poi pensare a questo quando gli si passa un valore di goal
+		if(map_.contiene_obs(goal))
+		{
+			cerr<<"Errore in Robot::cambia_goal(), inserimento goal in pos proibita!\n";
+			exit(EXIT_FAILURE);
+		}
+		
 		goal_ = goal;
 	}
 	
@@ -35,7 +58,7 @@ using std::pow;
 		return pos_==goal_;
 	}
 	
-	void Robot::cammina(Mappa& my_map)
+	void Robot::cammina()
 	{
 		Cella prox_cella((pos_.pos())[0], (pos_.pos())[1]);
 		float potenziale_min = Robot::calcola_potenziale(pos_, 0.0);
@@ -46,7 +69,7 @@ using std::pow;
 			for(int j = (pos_.pos())[1] -1; i < (pos_.pos()[1]+2); i++)
 			{
 				Cella candidato(i,j);
-				float pot_cand = Robot::calcola_potenziale(candidato, my_map.distanza_cella_vicina(candidato));
+				float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato));
 				
 				if(pot_cand<potenziale_min)
 				{
@@ -57,9 +80,9 @@ using std::pow;
 			}
 		}
 		//aggiorno il "registro" delle posizioni dei robot nella mappa
-		my_map.sposta_robot(pos_, prox_cella);
+		map_.sposta_robot(pos_, prox_cella);
 		
-		//trovata la cella a potenziale minore, cambia la cella		
+		//il robot cambia la cella		
 		Robot::cambia_pos(prox_cella);
 	}
 	
@@ -80,7 +103,7 @@ using std::pow;
 			potenziale = 0;
 		}
 		//calcolo potenziale attrattivo
-		potenziale = potenziale + 0.5*COEF_ATTRATTIVO*pow(distanza_euclidea(my_pos, goal_),2);
+		potenziale = potenziale + 0.5*COEF_ATTRATTIVO*pow(distanza_euclidea(my_pos, goal_, map_.dim_cella()),2);
 		
 		return potenziale;
 	}

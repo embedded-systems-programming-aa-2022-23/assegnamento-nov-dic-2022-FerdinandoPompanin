@@ -6,8 +6,6 @@
 #include <array>
 #include <set>
 
-#define DIM_CELLA 1 //[m] dimensione della cella, da essere multiplo o sottomultiplo del metro
-
 class Cella {
 public:
 	Cella(int pos_x, int pos_y);
@@ -32,14 +30,15 @@ public:
 	void sposta_robot(Cella prima, Cella dopo);
 	float distanza_cella_vicina(Cella cercata); //ritorna il valore della distanza euclidea tra la cella inserita e l'ostacolo-robot più vicino
 	void stampa_mappa();
-	
+	bool contiene_obs(Cella pos);
+	bool contiene_robot(Cella pos);
 private:
 	std::set<Cella> pos_ostacoli;
 	std::set<Cella> pos_robot;
 	float dim_;
 };
 
-float distanza_euclidea(const Cella pos_1, const Cella pos_2);
+float distanza_euclidea(const Cella pos_1, const Cella pos_2, float dim_cella);
 
 bool operator==(const Cella& c1, const Cella& c2);
 
