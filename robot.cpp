@@ -69,15 +69,13 @@ using std::pow;
 			for(int j = (pos_.pos())[1] -1; j < (pos_.pos()[1]+2); j++)
 			{
 				Cella candidato(i,j);
-				if((!map_.contiene_obs(candidato))&&(!map_.contiene_robot(candidato)))
-				{ 
-					float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
 				
-					if(pot_cand<potenziale_min)
-					{
-						potenziale_min = pot_cand;
-						prox_cella = candidato;
-					}
+				float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
+				
+				if(pot_cand<potenziale_min)
+				{
+					potenziale_min = pot_cand;
+					prox_cella = candidato;
 				}
 			}
 		}
@@ -109,8 +107,6 @@ using std::pow;
 			potenziale = 0.5*COEF_REPULSIVO*pow((1/distanza)-(1/DIST_MAX),2);
 		}
 		
-		if(distanza==0)
-			potenziale = 0;
 		
 		//calcolo potenziale attrattivo
 		potenziale = potenziale + 0.5*COEF_ATTRATTIVO*pow(distanza_euclidea(my_pos, goal_, map_.dim_cella()),2);
