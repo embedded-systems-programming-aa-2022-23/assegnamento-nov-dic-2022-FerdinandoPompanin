@@ -61,26 +61,26 @@ using std::pow;
 	void Robot::cammina()
 	{
 		Cella prox_cella((pos_.pos())[0], (pos_.pos())[1]);
-		float potenziale_min = Robot::calcola_potenziale(pos_, 0.0);
+		float potenziale_min = Robot::calcola_potenziale(prox_cella, map_.distanza_cella_vicina(prox_cella, pos_));
 		
 		//per ogni cella limitrofa fai il calcolo del potenziale
 		for(int i = ((pos_.pos())[0]-1); i < (pos_.pos()[0]+2); i++)
 		{
-			for(int j = (pos_.pos())[1] -1; i < (pos_.pos()[1]+2); i++)
+			for(int j = (pos_.pos())[1] -1; j < (pos_.pos()[1]+2); j++)
 			{
 				Cella candidato(i,j);
-				float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato));
+				if((!map_.contiene_obs(candidato))&&(!map_.contiene_robot(candidato)))
+				{ 
+					float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
 				
-				if(pot_cand<potenziale_min)
-				{
-					potenziale_min = pot_cand;
-					prox_cella = candidato;
+					if(pot_cand<potenziale_min)
+					{
+						potenziale_min = pot_cand;
+						prox_cella = candidato;
+					}
 				}
-				
 			}
 		}
-		//aggiorno il "registro" delle posizioni dei robot nella mappa
-		map_.sposta_robot(pos_, prox_cella);
 		
 		//il robot cambia la cella		
 		Robot::cambia_pos(prox_cella);
@@ -88,20 +88,30 @@ using std::pow;
 	
 	void Robot::cambia_pos(Cella nuova_pos)
 	{
+		if(map_.contiene_obs(nuova_pos) || map_.contiene_robot(nuova_pos))
+		{
+			cerr<<"Errore in Robot::cambia_pos(), posizioni non valide!\n";
+			exit(EXIT_FAILURE);
+		}
+		
+		map_.sposta_robot(pos_, nuova_pos);
 		pos_ = nuova_pos;
 	}
 	
-	//passagli la cella e la distanza dall'ostacolo più vicino
 	float Robot::calcola_potenziale(Cella my_pos, float distanza)
 	{	
 		float potenziale;
 		//calcolo potenziale repulsivo
-		if(distanza>DIST_MAX || distanza==0)
+		if(distanza>DIST_MAX)
 		{
 			potenziale = 0;
 		}else{
 			potenziale = 0.5*COEF_REPULSIVO*pow((1/distanza)-(1/DIST_MAX),2);
 		}
+		
+		if(distanza==0)
+			potenziale = 0;
+		
 		//calcolo potenziale attrattivo
 		potenziale = potenziale + 0.5*COEF_ATTRATTIVO*pow(distanza_euclidea(my_pos, goal_, map_.dim_cella()),2);
 		

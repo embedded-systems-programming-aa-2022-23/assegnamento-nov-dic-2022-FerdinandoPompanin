@@ -25,7 +25,7 @@ int main()
 	
 	my_robot.cambia_goal(c4);
 	
-	for(int i =0; i<20; i++)
+	while(!my_robot.goal_raggiunto())
 	{
 		my_robot.cammina();
 		cout<<my_robot<<"\n";

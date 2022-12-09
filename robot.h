@@ -6,7 +6,7 @@
 
 #define DIST_MAX 10 //sarebbe il Q*, da esprimere i metri, per ora scelto questo in modo arbitrario
 #define COEF_ATTRATTIVO 2 //coefficiente per calcolo potenziale attrattivo, chiedere alla prof valori verosimili
-#define COEF_REPULSIVO 1.5 //coefficiente per calcolo potenziale repulsivo, chiedere alla prof valori verosimili
+#define COEF_REPULSIVO 5 //coefficiente per calcolo potenziale repulsivo, chiedere alla prof valori verosimili
 
 class Robot {
 public:

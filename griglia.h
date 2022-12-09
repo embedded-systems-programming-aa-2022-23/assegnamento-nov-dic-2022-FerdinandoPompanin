@@ -28,7 +28,7 @@ public:
 	void inserisci_ostacolo(Cella min, Cella max); //inserimento di ostacolo definito come da specifiche, si può implementare con array o cella
 	void inserisci_robot(Cella posizione);
 	void sposta_robot(Cella prima, Cella dopo);
-	float distanza_cella_vicina(Cella cercata); //ritorna il valore della distanza euclidea tra la cella inserita e l'ostacolo-robot più vicino
+	float distanza_cella_vicina(Cella cercata, Cella my_r); //ritorna il valore della distanza euclidea tra la cella inserita e l'ostacolo-robot più vicino
 	void stampa_mappa();
 	bool contiene_obs(Cella pos);
 	bool contiene_robot(Cella pos);

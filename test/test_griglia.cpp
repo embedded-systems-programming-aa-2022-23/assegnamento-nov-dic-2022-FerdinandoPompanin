@@ -60,7 +60,7 @@ int main()
 	//testing Mappa:distanza_cella_vicina()
 
 	Cella c0(0, 0);
-	cout << "\nDistanza cella_vicina(): "<< my_mappa.distanza_cella_vicina(c0); 
+	cout << "\nDistanza cella_vicina(): "<< my_mappa.distanza_cella_vicina(c0, my_cella); 
 	
 return 0;
 }
