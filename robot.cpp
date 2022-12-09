@@ -60,7 +60,7 @@ using std::pow;
 	
 	void Robot::cammina()
 	{
-		Cella prox_cella((pos_.pos())[0], (pos_.pos())[1]);
+		Cella prox_cella((pos_.pos())[0]-1, (pos_.pos())[1]-1);
 		float potenziale_min = Robot::calcola_potenziale(prox_cella, map_.distanza_cella_vicina(prox_cella, pos_));
 		
 		//per ogni cella limitrofa fai il calcolo del potenziale
@@ -69,13 +69,15 @@ using std::pow;
 			for(int j = (pos_.pos())[1] -1; j < (pos_.pos()[1]+2); j++)
 			{
 				Cella candidato(i,j);
-				
-				float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
-				
-				if(pot_cand<potenziale_min)
+				if(candidato!=pos_)
 				{
-					potenziale_min = pot_cand;
-					prox_cella = candidato;
+					float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
+				
+					if(pot_cand<potenziale_min)
+					{
+						potenziale_min = pot_cand;
+						prox_cella = candidato;
+					}
 				}
 			}
 		}

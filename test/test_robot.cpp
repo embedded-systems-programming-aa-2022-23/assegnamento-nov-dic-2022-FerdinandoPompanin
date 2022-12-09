@@ -31,5 +31,20 @@ int main()
 		cout<<my_robot<<"\n";
 	}	
 
+	Cella c5(8,7);
+	Cella c6(1,6);
+
+	my_map.stampa_mappa();
+
+	Robot my_robot2(c5, c6, my_map);
+	
+	cout<<my_robot2.valore_pos()<<"\n";
+	cout<< my_robot2<<"\n";
+
+	while(!my_robot2.goal_raggiunto())
+	{
+		my_robot2.cammina();
+		cout<<my_robot2<<"\n";
+	}
 return 0;
 }
