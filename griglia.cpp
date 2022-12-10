@@ -128,17 +128,17 @@ using std::pair;
 		
 		for(auto pos_corr = pos_ostacoli.begin(); pos_corr != pos_ostacoli.end(); pos_corr++)
 		{
-			float distanza = distanza_euclidea(cercata, *pos_corr, dim_);
-			if(distanza < distanza_min)
-					distanza_min = distanza;
+				float distanza = distanza_euclidea(cercata, *pos_corr, dim_);	
+					if(distanza < distanza_min)
+						distanza_min = distanza;
 		}
 		
 		for(auto pos_corr{pos_robot.begin()}; pos_corr != pos_robot.end(); pos_corr++)
 		{
 			if(my_r != pos_corr->first){
 				float distanza = distanza_euclidea(cercata, pos_corr->first, dim_) - pos_corr->second;
-				if(distanza < distanza_min)
-					distanza_min = distanza;
+					if(distanza < distanza_min)
+						distanza_min = distanza;
 			}
 		}
 		
@@ -192,10 +192,8 @@ using std::pair;
 		
 		for(auto it{pos_robot.cbegin()}; it != pos_robot.cend(); it++)
 		{
-			if(it->first != pos){
 				if(distanza_euclidea(pos, it->first, dim_)<(raggio+it->second))
-					contiene=true;
-			}		
+					contiene=true;	
 		}
 	
 		return contiene;
@@ -203,11 +201,11 @@ using std::pair;
 	
 	bool Mappa::spostamento_non_valido(Cella prima, Cella dopo, float raggio)
 	{
-		bool non_valido = contiene_obs(dopo, raggio);
+		bool non_valido = Mappa::contiene_obs(dopo, raggio);
 		
 		for(auto it{pos_robot.cbegin()}; it != pos_robot.cend(); it++)
 		{
-			if((it->first != prima) && (it->first != dopo)){
+			if(it->first != prima){
 				if(distanza_euclidea(dopo, it->first, dim_)<(raggio+it->second))
 					non_valido=true;
 			}		
@@ -215,6 +213,7 @@ using std::pair;
 		
 		return non_valido;
 	}
+	
 //definisco operatori per tipo Cella
 	bool operator==(const Cella& c1, const Cella& c2)
 	{

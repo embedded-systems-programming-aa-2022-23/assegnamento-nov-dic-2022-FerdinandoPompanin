@@ -65,12 +65,15 @@ using std::ceil;
 				Cella candidato(i,j);
 				if(candidato!=pos_)
 				{
-					float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
-				
-					if(pot_cand<potenziale_min)
+					if(!map_.spostamento_non_valido(pos_, candidato, raggio_))
 					{
-						potenziale_min = pot_cand;
-						prox_cella = candidato;
+						float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
+				
+						if(pot_cand<potenziale_min)
+						{
+							potenziale_min = pot_cand;
+							prox_cella = candidato;
+						}
 					}
 				}
 			}
