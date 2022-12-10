@@ -46,7 +46,7 @@ int main()
 	//testing Mappa::inserisci_robot()
 	Cella c5(-10, -2);
 	
-	my_mappa.inserisci_robot(c5);
+	my_mappa.inserisci_robot(c5, 1.5);
 	
 	my_mappa.stampa_mappa();
 	

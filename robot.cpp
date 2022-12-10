@@ -4,42 +4,36 @@
 using std::cerr;
 #include <cmath>
 using std::pow;
+using std::sqrt;
+using std::ceil;
 
 #include "robot.h"
 
 //definisco classe robot
-	Robot::Robot(Cella pos, Cella goal, Mappa& map)
+	Robot::Robot(Cella pos, Cella goal, float raggio, Mappa& mappa)
 		:pos_{pos},
 		goal_{goal},
-		map_{map}
+		map_{mappa},
+		raggio_{raggio}
 		{
-			if(map.contiene_obs(pos) || map.contiene_robot(pos) || map.contiene_obs(goal))
-			{
-				cerr<<"Errore il Robot::Robot(), stai inserendo robot o goal in posizioni proibite!!\n";
-				exit(EXIT_FAILURE);
-			}
-		
-			map.inserisci_robot(pos);
+			//controllo me lo fa già inserisci_robot()
+			mappa.inserisci_robot(pos, raggio);
 		}
 		
-	Robot::Robot(Cella pos, Mappa& map)
+	Robot::Robot(Cella pos, float raggio, Mappa& mappa)
 		:pos_{pos},
 		goal_{pos}, //scelgo di mettere di default il goal nella posizione in cui si trova il robot, così se non ha un vero da raggiungere goal, risulta "non impegnato"
-		map_{map}
+		map_{mappa},
+		raggio_{raggio}
 		{
-			if(map.contiene_obs(pos) || map.contiene_obs(pos))
-			{
-				cerr<<"Errore il Robot::Robot(), stai inserendo robot o goal in posizioni proibite!!\n";
-				exit(EXIT_FAILURE);
-			}
-		
-			map.inserisci_robot(pos);
+			//controllo me lo fa gia inserisci_robot()
+			mappa.inserisci_robot(pos, raggio);
 		}
 	
 	
 	void Robot::cambia_goal(Cella goal)
 	{
-		if(map_.contiene_obs(goal))
+		if(map_.contiene_obs(goal, raggio_))
 		{
 			cerr<<"Errore in Robot::cambia_goal(), inserimento goal in pos proibita!\n";
 			exit(EXIT_FAILURE);
@@ -60,13 +54,13 @@ using std::pow;
 	
 	void Robot::cammina()
 	{
-		Cella prox_cella((pos_.pos())[0]-1, (pos_.pos())[1]-1);
+		Cella prox_cella((pos_.posx()-1), (pos_.posy()-1));
 		float potenziale_min = Robot::calcola_potenziale(prox_cella, map_.distanza_cella_vicina(prox_cella, pos_));
 		
 		//per ogni cella limitrofa fai il calcolo del potenziale
-		for(int i = ((pos_.pos())[0]-1); i < (pos_.pos()[0]+2); i++)
+		for(int i{(pos_.posx()-1)}; i < (pos_.posx()+2); i++)
 		{
-			for(int j = (pos_.pos())[1] -1; j < (pos_.pos()[1]+2); j++)
+			for(int j{pos_.posy() -1}; j < (pos_.posy()+2); j++)
 			{
 				Cella candidato(i,j);
 				if(candidato!=pos_)
@@ -88,12 +82,7 @@ using std::pow;
 	
 	void Robot::cambia_pos(Cella nuova_pos)
 	{
-		if(map_.contiene_obs(nuova_pos) || map_.contiene_robot(nuova_pos))
-		{
-			cerr<<"Errore in Robot::cambia_pos(), posizioni non valide!\n";
-			exit(EXIT_FAILURE);
-		}
-		
+		//il controllo me lo fa gia sposta_robot()
 		map_.sposta_robot(pos_, nuova_pos);
 		pos_ = nuova_pos;
 	}
@@ -108,7 +97,6 @@ using std::pow;
 		}else{
 			potenziale = 0.5*COEF_REPULSIVO*pow((1/distanza)-(1/DIST_MAX),2);
 		}
-		
 		
 		//calcolo potenziale attrattivo
 		potenziale = potenziale + 0.5*COEF_ATTRATTIVO*pow(distanza_euclidea(my_pos, goal_, map_.dim_cella()),2);

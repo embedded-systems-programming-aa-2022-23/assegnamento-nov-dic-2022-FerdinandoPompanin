@@ -11,14 +11,14 @@ int main()
 {
 	Mappa my_map(1.0);
 	
-	Cella c1(0,0);
+	Cella c1(-1,-1);
 	Cella c2(1,1);
 	Cella c3(5,5);
 	Cella c4(8,6);
 
 	my_map.inserisci_ostacolo(c2, c3);
 
-	Robot my_robot(c1, my_map);
+	Robot my_robot(c1, 1.0, my_map);
 
 	cout<<my_robot.valore_pos()<<"\n";
 	cout<< my_robot<<"\n";
@@ -36,7 +36,7 @@ int main()
 
 	my_map.stampa_mappa();
 
-	Robot my_robot2(c5, c6, my_map);
+	Robot my_robot2(c5, c6, 1.5, my_map);
 	
 	cout<<my_robot2.valore_pos()<<"\n";
 	cout<< my_robot2<<"\n";

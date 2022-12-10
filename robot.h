@@ -2,6 +2,8 @@
 #ifndef robot_h
 #define robot_h
 
+#include <set>
+
 #include "griglia.h"
 
 #define DIST_MAX 10 //sarebbe il Q*, da esprimere i metri, per ora scelto questo in modo arbitrario
@@ -10,8 +12,8 @@
 
 class Robot {
 public:
-	Robot(Cella pos, Cella goal, Mappa& map);
-	Robot(Cella pos, Mappa& map);
+	Robot(Cella pos, Cella goal, float raggio, Mappa& mappa);
+	Robot(Cella pos, float raggio, Mappa& mappa);
 	
 	void cambia_goal(Cella goal);
 	Cella valore_pos();
@@ -23,6 +25,7 @@ private:
 	Cella pos_;
 	Cella goal_;
 	Mappa& map_;
+	float raggio_;
 
 	void cambia_pos(Cella nuova_pos);
 	float calcola_potenziale(Cella my_pos, float distanza);
