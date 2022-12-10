@@ -31,8 +31,8 @@ int main()
 		cout<<my_robot<<"\n";
 	}	
 
-	Cella c5(8,7);
-	Cella c6(1,6);
+	Cella c5(11,7);
+	Cella c6(1,8);
 
 	my_map.stampa_mappa();
 

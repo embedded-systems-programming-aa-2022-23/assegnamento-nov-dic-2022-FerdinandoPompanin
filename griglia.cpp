@@ -15,7 +15,6 @@ using std::pair;
 
 #include "griglia.h"
 //definisco classe cella
-
 	Cella::Cella(int pos_x, int pos_y)
 		:x_{pos_x},
 		 y_{pos_y}
@@ -135,16 +134,16 @@ using std::pair;
 		
 		for(auto pos_corr{pos_robot.begin()}; pos_corr != pos_robot.end(); pos_corr++)
 		{
-			if(my_r != pos_corr->first){
+			if(my_r != pos_corr->first)
+			{
 				float distanza = distanza_euclidea(cercata, pos_corr->first, dim_) - pos_corr->second;
-					if(distanza < distanza_min)
-						distanza_min = distanza;
+				if(distanza < distanza_min)
+					distanza_min = distanza;
 			}
 		}
 		
 		return distanza_min;
 	}
-	
 	
 	//utile unicamente al testing sta funzione
 	void Mappa::stampa_mappa()
@@ -213,6 +212,24 @@ using std::pair;
 		
 		return non_valido;
 	}
+	
+	Cella Mappa::prima_cella_valida(Cella pos, float raggio)
+	{
+		for(int i=-1; i<2; i++)
+		{
+			for(int j=-1; j<2; j++)
+			{
+				Cella valido(pos.posx()+i,pos.posy()+j);
+				if(!spostamento_non_valido(pos, valido, raggio))
+				{
+					return valido;
+				}
+			}
+		}
+		return pos;
+	}
+	
+	
 	
 //definisco operatori per tipo Cella
 	bool operator==(const Cella& c1, const Cella& c2)

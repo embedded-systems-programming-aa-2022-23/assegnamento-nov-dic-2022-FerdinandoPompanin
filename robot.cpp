@@ -54,7 +54,8 @@ using std::ceil;
 	
 	void Robot::cammina()
 	{
-		Cella prox_cella((pos_.posx()-1), (pos_.posy()-1));
+		Cella prox_cella(pos_.posx()-1, pos_.posy()-1);
+		prox_cella = map_.prima_cella_valida(pos_, raggio_);
 		float potenziale_min = Robot::calcola_potenziale(prox_cella, map_.distanza_cella_vicina(prox_cella, pos_));
 		
 		//per ogni cella limitrofa fai il calcolo del potenziale

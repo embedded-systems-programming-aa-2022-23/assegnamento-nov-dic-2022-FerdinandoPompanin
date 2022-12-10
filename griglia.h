@@ -36,6 +36,7 @@ public:
 	bool contiene_obs(Cella pos, float raggio);
 	bool contiene_robot(Cella pos, float raggio);
 	bool spostamento_non_valido(Cella prima, Cella dopo, float raggio);
+	Cella prima_cella_valida(Cella pos, float raggio);
 private:
 	std::set<Cella> pos_ostacoli;
 	std::map<Cella, float> pos_robot;
