@@ -33,7 +33,7 @@ using std::pair;
 		}
 	
 	
-	void Robot::cambia_goal(Cella goal)
+	void Robot::cambia_goal(const Cella& goal)
 	{
 		if(map_.contiene_obs(goal, raggio_))
 		{
@@ -44,12 +44,12 @@ using std::pair;
 		goal_ = goal;
 	}
 	
-	Cella Robot::valore_pos()
+	Cella Robot::valore_pos() const
 	{
 		return pos_;
 	}
 	
-	bool Robot::goal_raggiunto()
+	bool Robot::goal_raggiunto() const
 	{
 		return pos_==goal_;
 	}
@@ -92,14 +92,14 @@ using std::pair;
 		Robot::cambia_pos(prox_cella);
 	}
 	
-	void Robot::cambia_pos(Cella nuova_pos)
+	void Robot::cambia_pos(const Cella& nuova_pos)
 	{
 		//il controllo me lo fa gia sposta_robot()
 		map_.sposta_robot(pos_, nuova_pos);
 		pos_ = nuova_pos;
 	}
 	
-	float Robot::calcola_potenziale(Cella my_pos, float distanza)
+	float Robot::calcola_potenziale(const Cella& my_pos, float distanza) const
 	{	
 		float potenziale;
 		//calcolo potenziale repulsivo

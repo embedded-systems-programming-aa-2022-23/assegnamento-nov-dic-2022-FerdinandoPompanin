@@ -15,9 +15,9 @@ public:
 	Robot(Cella pos, Cella goal, float raggio, Mappa& mappa);
 	Robot(Cella pos, float raggio, Mappa& mappa);
 	
-	void cambia_goal(Cella goal);
-	Cella valore_pos();
-	bool goal_raggiunto(); 
+	void cambia_goal(const Cella& goal);
+	Cella valore_pos() const;
+	bool goal_raggiunto() const; 
 	void cammina();
 
 private:
@@ -27,8 +27,8 @@ private:
 	Mappa& map_;
 	float raggio_;
 
-	void cambia_pos(Cella nuova_pos);
-	float calcola_potenziale(Cella my_pos, float distanza);
+	void cambia_pos(const Cella& nuova_pos);
+	float calcola_potenziale(const Cella& my_pos, float distanza) const;
 };
 
 std::ostream& operator<<(std::ostream& os, Robot& r);

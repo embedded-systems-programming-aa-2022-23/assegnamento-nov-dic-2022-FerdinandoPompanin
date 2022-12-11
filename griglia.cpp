@@ -9,6 +9,7 @@ using std::endl;
 #include <cmath>
 using std::sqrt;
 using std::pow;
+using std::floor;
 #include <map>
 using std::map;
 using std::pair;
@@ -52,13 +53,8 @@ using std::min_element;
 
 	Cella Mappa::crea_cella(float pos_x, float pos_y)
 	{
-		int x = static_cast<int>(pos_x/dim_);
-		int y = static_cast<int>(pos_y/dim_);
-		
-		if(pos_x<0)
-			x--;
-		if(pos_y<0)
-			y--;
+		int x = static_cast<int>(floor((pos_x/dim_)));
+		int y = static_cast<int>(floor((pos_y/dim_)));
 		
 		Cella my_cella(x, y);
 		
@@ -66,7 +62,7 @@ using std::min_element;
 	}
 
 	//inserisco TUTTO l'ostacolo, si potrebbe anche inserire solo il contorno per risparmiare, pensaci in seguito
-	void Mappa::inserisci_ostacolo(Cella min, Cella max)
+	void Mappa::inserisci_ostacolo(const Cella& min, const Cella& max)
 	{
 		//inserire controllo dati in ingresso
 		for(int i{min.posx()}; i <= max.posx(); i++)
@@ -86,7 +82,7 @@ using std::min_element;
 	}
 	
 	
-	void Mappa::inserisci_robot(Cella posizione, float raggio)
+	void Mappa::inserisci_robot(const Cella& posizione, float raggio)
 	{
 		//controllo per evitare di inserire robot in cella già occupata
 		if(Mappa::contiene_obs(posizione, raggio)||Mappa::contiene_robot(posizione, raggio))
@@ -99,7 +95,7 @@ using std::min_element;
 	}
 	
 	
-	void Mappa::sposta_robot(Cella prima, Cella dopo)
+	void Mappa::sposta_robot(const Cella& prima, const Cella& dopo)
 	{
 		float prov{pos_robot[prima]};
 		
@@ -115,7 +111,7 @@ using std::min_element;
 	}
 	
 	
-	float Mappa::distanza_cella_vicina(Cella cercata, Cella my_r)
+	float Mappa::distanza_cella_vicina(const Cella& cercata, const Cella& my_r) const
 	{
 		vector<float> distanze;
 		
@@ -146,7 +142,7 @@ using std::min_element;
 	}
 	
 	//utile unicamente al testing sta funzione
-	void Mappa::stampa_mappa()
+	void Mappa::stampa_mappa() const
 	{
 		cout << "Gli ostacoli sono : \n";
 		
@@ -158,20 +154,20 @@ using std::min_element;
 		cout <<"\nLa dim. delle cella è: "<< dim_<<"\n";
 	}
 	
-	float distanza_euclidea(const Cella pos_1, const Cella pos_2, float dim_cella)
+	float distanza_euclidea(const Cella& pos_1, const Cella& pos_2, float dim_cella)
 	{
 		float distanza = sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2))*dim_cella;
 		return distanza;
 	}
 	
-	float distanza_angolo(const Cella pos_1, const Cella pos_2, float dim_cella)
+	float distanza_angolo(const Cella& pos_1, const Cella& pos_2, float dim_cella)
 	{
 		float distanza = (sqrt( pow(((pos_1.pos())[0] - (pos_2.pos())[0]), 2) + pow(((pos_1.pos())[1] - (pos_2.pos())[1]), 2))-(sqrt(2)/2))*dim_cella;
 		return distanza;
 	}
 	
 	
-	bool Mappa::contiene_obs(Cella pos, float raggio)
+	bool Mappa::contiene_obs(const Cella& pos, float raggio) const
 	{
 		bool contiene{pos_ostacoli.contains(pos)};
 		
@@ -185,7 +181,7 @@ using std::min_element;
 		return contiene;
 	}
 	
-	bool Mappa::contiene_robot(Cella pos, float raggio)
+	bool Mappa::contiene_robot(const Cella& pos, float raggio) const
 	{
 		bool contiene = false;
 		
@@ -198,7 +194,7 @@ using std::min_element;
 		return contiene;
 	}
 	
-	bool Mappa::spostamento_non_valido(Cella prima, Cella dopo, float raggio)
+	bool Mappa::spostamento_non_valido(const Cella& prima, const Cella& dopo, float raggio) const
 	{
 		bool non_valido = Mappa::contiene_obs(dopo, raggio);
 		
