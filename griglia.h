@@ -26,7 +26,7 @@ class Mappa {
 public:
 	Mappa(float dimensione);
 
-	float dim_cella();
+	float dim_cella() const;
 	Cella crea_cella(float pos_x, float pos_y); //serve a creare delle posizioni Celle  partendo da coordinate cartesiane float, ho bisogno del dato delle dim cella per poter discretizzare
 	void inserisci_ostacolo(Cella min, Cella max); //inserimento di ostacolo definito come da specifiche, si può implementare con array o cella
 	void inserisci_robot(Cella posizione, float raggio);
@@ -34,13 +34,13 @@ public:
 	float distanza_cella_vicina(Cella cercata, Cella my_r); //ritorna il valore della distanza euclidea tra la cella inserita e l'ostacolo-robot più vicino
 	void stampa_mappa();
 	bool contiene_obs(Cella pos, float raggio);
-	bool contiene_robot(Cella pos, float raggio);
 	bool spostamento_non_valido(Cella prima, Cella dopo, float raggio);
-	Cella prima_cella_valida(Cella pos, float raggio);
 private:
 	std::set<Cella> pos_ostacoli;
 	std::map<Cella, float> pos_robot;
 	float dim_;
+	
+	bool contiene_robot(Cella pos, float raggio);
 };
 
 float distanza_euclidea(const Cella pos_1, const Cella pos_2, float dim_cella);

@@ -5,7 +5,9 @@ using std::cerr;
 #include <cmath>
 using std::pow;
 using std::sqrt;
-using std::ceil;
+#include <map>
+using std::map;
+using std::pair;
 
 #include "robot.h"
 
@@ -54,32 +56,38 @@ using std::ceil;
 	
 	void Robot::cammina()
 	{
-		Cella prox_cella(pos_.posx()-1, pos_.posy()-1);
-		prox_cella = map_.prima_cella_valida(pos_, raggio_);
-		float potenziale_min = Robot::calcola_potenziale(prox_cella, map_.distanza_cella_vicina(prox_cella, pos_));
+		map<Cella,float> celle_adiacenti;
 		
 		//per ogni cella limitrofa fai il calcolo del potenziale
 		for(int i{(pos_.posx()-1)}; i < (pos_.posx()+2); i++)
 		{
 			for(int j{pos_.posy() -1}; j < (pos_.posy()+2); j++)
 			{
-				Cella candidato(i,j);
+				Cella candidato(i, j);
 				if(candidato!=pos_)
 				{
 					if(!map_.spostamento_non_valido(pos_, candidato, raggio_))
 					{
 						float pot_cand = Robot::calcola_potenziale(candidato, map_.distanza_cella_vicina(candidato, pos_));
 				
-						if(pot_cand<potenziale_min)
-						{
-							potenziale_min = pot_cand;
-							prox_cella = candidato;
-						}
+						celle_adiacenti.insert(pair<Cella,float>(candidato, pot_cand));
 					}
-				}
+				}	
 			}
 		}
-		
+		Cella prox_cella(pos_.posx(),pos_.posy());
+		if(celle_adiacenti.size()!=0)
+		{
+			auto min = celle_adiacenti.cbegin();
+			for(auto it = celle_adiacenti.cbegin(); it != celle_adiacenti.cend(); it++)
+			{
+				if(it->second < min->second)
+					min = it;
+			}
+			
+			prox_cella = min->first;
+			
+		}
 		//il robot cambia la cella		
 		Robot::cambia_pos(prox_cella);
 	}

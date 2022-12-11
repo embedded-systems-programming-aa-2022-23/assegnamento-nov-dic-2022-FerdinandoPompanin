@@ -12,6 +12,10 @@ using std::pow;
 #include <map>
 using std::map;
 using std::pair;
+#include <vector>
+using std::vector;
+#include <algorithm>
+using std::min_element;
 
 #include "griglia.h"
 //definisco classe cella
@@ -41,7 +45,7 @@ using std::pair;
 		:dim_{dimensione}
 		{}
 
-	float Mappa::dim_cella()
+	float Mappa::dim_cella() const
 	{
 		return dim_;
 	}
@@ -113,23 +117,12 @@ using std::pair;
 	
 	float Mappa::distanza_cella_vicina(Cella cercata, Cella my_r)
 	{
-		float distanza_min;
-		
-		if(pos_ostacoli.size() != 0){
-			distanza_min = distanza_euclidea(cercata, *pos_ostacoli.cbegin(), dim_);
-		}else{
-			distanza_min = distanza_euclidea(cercata, (pos_robot.cbegin())->first, dim_);
-			if(pos_robot.size()==1)
-				distanza_min=0;
-			if(pos_robot.size()>1 && pos_robot.cbegin()->first==my_r)
-				distanza_min = distanza_euclidea(cercata, (++pos_robot.cbegin())->first, dim_);
-		}
+		vector<float> distanze;
 		
 		for(auto pos_corr = pos_ostacoli.begin(); pos_corr != pos_ostacoli.end(); pos_corr++)
 		{
 				float distanza = distanza_euclidea(cercata, *pos_corr, dim_);	
-					if(distanza < distanza_min)
-						distanza_min = distanza;
+				distanze.push_back(distanza);
 		}
 		
 		for(auto pos_corr{pos_robot.begin()}; pos_corr != pos_robot.end(); pos_corr++)
@@ -137,9 +130,16 @@ using std::pair;
 			if(my_r != pos_corr->first)
 			{
 				float distanza = distanza_euclidea(cercata, pos_corr->first, dim_) - pos_corr->second;
-				if(distanza < distanza_min)
-					distanza_min = distanza;
+				distanze.push_back(distanza);
 			}
+		}
+		
+		float distanza_min;
+		if(distanze.size()==0)
+		{
+			distanza_min = 0;
+		}else{
+			distanza_min = *min_element(distanze.cbegin(), distanze.cend());
 		}
 		
 		return distanza_min;
@@ -211,25 +211,7 @@ using std::pair;
 		}
 		
 		return non_valido;
-	}
-	
-	Cella Mappa::prima_cella_valida(Cella pos, float raggio)
-	{
-		for(int i=-1; i<2; i++)
-		{
-			for(int j=-1; j<2; j++)
-			{
-				Cella valido(pos.posx()+i,pos.posy()+j);
-				if(!spostamento_non_valido(pos, valido, raggio))
-				{
-					return valido;
-				}
-			}
-		}
-		return pos;
-	}
-	
-	
+	}	
 	
 //definisco operatori per tipo Cella
 	bool operator==(const Cella& c1, const Cella& c2)
