@@ -9,6 +9,7 @@
 
 class Cella {
 public:
+	Cella();
 	Cella(int pos_x, int pos_y);
 	
 	std::array<int,2> pos() const; //restituisce le coordinate della cella
@@ -27,7 +28,7 @@ public:
 	Mappa(float dimensione);
 
 	float dim_cella() const;
-	Cella crea_cella(float pos_x, float pos_y); //serve a creare delle posizioni Celle  partendo da coordinate cartesiane float, ho bisogno del dato delle dim cella per poter discretizzare
+	Cella crea_cella(float pos_x, float pos_y) const; //serve a creare delle posizioni Celle  partendo da coordinate cartesiane float, ho bisogno del dato delle dim cella per poter discretizzare
 	void inserisci_ostacolo(const Cella& min, const Cella& max); //inserimento di ostacolo definito come da specifiche, si può implementare con array o cella
 	void inserisci_robot(const Cella& posizione, float raggio);
 	void sposta_robot(const Cella& prima, const Cella& dopo);

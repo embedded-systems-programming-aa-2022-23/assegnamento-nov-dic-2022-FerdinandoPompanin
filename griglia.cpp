@@ -20,6 +20,11 @@ using std::min_element;
 
 #include "griglia.h"
 //definisco classe cella
+	Cella::Cella()
+		:x_{0},
+		y_{0}
+		{}
+		
 	Cella::Cella(int pos_x, int pos_y)
 		:x_{pos_x},
 		 y_{pos_y}
@@ -51,7 +56,7 @@ using std::min_element;
 		return dim_;
 	}
 
-	Cella Mappa::crea_cella(float pos_x, float pos_y)
+	Cella Mappa::crea_cella(float pos_x, float pos_y) const
 	{
 		int x = static_cast<int>(floor((pos_x/dim_)));
 		int y = static_cast<int>(floor((pos_y/dim_)));
