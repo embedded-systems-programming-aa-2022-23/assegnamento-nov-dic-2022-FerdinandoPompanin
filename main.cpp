@@ -29,7 +29,7 @@ void processo_robot(Cella pos, float raggio)
 	Robot my_robot(pos, raggio, my_map);
 	
 	for(int i = 0; i < num_goal; i++){
-        	Cella value = my_mon.take();
+        	Cella value = my_mon.take(my_robot.valore_pos());
 		my_robot.cambia_goal(value);
 	
 		while(!my_robot.goal_raggiunto())
