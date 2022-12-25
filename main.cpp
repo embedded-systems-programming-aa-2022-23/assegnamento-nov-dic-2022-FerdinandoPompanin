@@ -14,9 +14,9 @@ using std::mutex;
 
 #define k 1
 #define N 3
-#define num_goal 3//questo è il numero di goal che orgni robot dovrà raggiungere
+#define num_goal 3//questo è il numero di goal che ogni robot dovrà raggiungere
 
-Mappa my_map(1.0);//globali perchè condivisa dai processi robot
+Mappa my_map(1.0);//globali perchè condivisa dai processi
 
 PC my_mon(k*N);
 
@@ -34,7 +34,7 @@ void processo_robot(Cella pos, float raggio)
 	
 		while(!my_robot.goal_raggiunto())
 		{
-			mutex_mappa.lock();
+			mutex_mappa.lock(); //i lock si possono mettere anche fuori dal ciclo while, ma cosi si muove solo 1 robot alla volta.
 			my_robot.cammina();
 			mutex_mappa.unlock();
 		}
