@@ -92,6 +92,16 @@ using std::pair;
 		Robot::cambia_pos(prox_cella);
 	}
 	
+	float x_value() const
+	{
+		return (pos_.posx() * map_.dim_cella());
+	}
+	
+	float y_value() const
+	{
+		return (pos_.posy() * map_.dim_cella());
+	}
+	
 	void Robot::cambia_pos(const Cella& nuova_pos)
 	{
 		//il controllo me lo fa gia sposta_robot()

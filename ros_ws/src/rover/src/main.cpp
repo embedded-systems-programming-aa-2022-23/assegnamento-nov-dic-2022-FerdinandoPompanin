@@ -37,7 +37,7 @@ void processo_robot(Cella pos, float raggio, int id)
 	
 	auto rover_ = Rover(id);
 	
-	rover_.set_pos((my_robot.valore_pos()).posx(), (my_robot.valore_pos()).posy());
+	rover_.set_pos(my_robot.x_value(), my_robot.y_value());
 	
 	for(int i = 0; i < num_goal; i++){
         	Cella value = my_mon.take(my_robot.valore_pos());
@@ -48,7 +48,7 @@ void processo_robot(Cella pos, float raggio, int id)
 			mutex_mappa.lock(); //i lock si possono mettere anche fuori dal ciclo while, ma cosi si muove solo 1 robot alla volta.
 			my_robot.cammina();
 			
-			rover_.set_pos((my_robot.valore_pos()).posx(), (my_robot.valore_pos()).posy());
+			rover_.set_pos(my_robot.x_value(), my_robot.y_value());
 	
 			mutex_mappa.unlock();
 		}
@@ -84,21 +84,32 @@ int main(int argc, char* argv[]) {
   
   g_node = rclcpp::Node::make_shared("rover_publisher");
   g_publisher = g_node->create_publisher<rover_visualizer::msg::RoverPosition>("rover", 10);
- 
-	my_map.inserisci_ostacolo(my_map.crea_cella(15,20), my_map.crea_cella(40,40));
-	my_map.inserisci_ostacolo(my_map.crea_cella(0,0), my_map.crea_cella(1,2));
-	my_map.inserisci_ostacolo(my_map.crea_cella(-1000,-70), my_map.crea_cella(-50,-50));
+  
+ //lettura e inserimento degli ostacoli
+	std::ifstream infile{"obstacle_positions.txt"};
 
+	while(!infile.eof())
+	{
+		double x_min, y_min, x_max, y_max;
+		infile >> x_min >> y_min >> x_max >> y_max;
+		if (infile.eof() || infile.fail() || infile.bad()) {
+            		std::cerr << "Error in input\n";
+            		break;
+       		}
+       		
+       		my_map.inserisci_ostacolo(my_map.crea_cella(x_min, y_min), my_map.crea_cella(x_max, y_max));
+       	}	
+       		
 	Cella pos1 = Cella(-15, -15);
 	Cella pos2 = Cella(-26, 32);
 	Cella pos3 = Cella(7, 10);
-	
-	std::thread s1(processo_satellite, "../coordinate/stazione1.txt");
-	std::thread s2(processo_satellite, "../coordinate/stazione2.txt");
 
 	std::thread r1(processo_robot, pos1, r, 1);
 	std::thread r2(processo_robot, pos2, r, 2);
 	std::thread r3(processo_robot, pos3, r, 3);
+	
+	std::thread s1(processo_satellite, "../coordinate/stazione1.txt");
+	std::thread s2(processo_satellite, "../coordinate/stazione2.txt");
 	
 	s1.join();
 	s2.join();

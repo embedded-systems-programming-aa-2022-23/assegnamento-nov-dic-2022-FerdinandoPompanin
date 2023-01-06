@@ -19,6 +19,9 @@ public:
 	Cella valore_pos() const;
 	bool goal_raggiunto() const; 
 	void cammina();
+	//aggiunti rispetto al passo 2
+	float x_value() const;
+	float y_value() const;
 
 private:
 	//per ora puntiforme, da aggiungere poi il raggio e tutto quello che ne consegue
