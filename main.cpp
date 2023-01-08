@@ -28,7 +28,7 @@ void processo_robot(Cella pos, float raggio)
 	//creo robot
 	Robot my_robot(pos, raggio, my_map);
 	
-	for(int i = 0; i < num_goal; i++){
+	while(!my_mon.order_to_stop()){
         	Cella value = my_mon.take(my_robot.valore_pos());
 		my_robot.cambia_goal(value);
 	
@@ -70,23 +70,36 @@ void processo_satellite( const std::string& nome_file)
 int main()
 {
 	//inserimento degli ostacoli
-	my_map.inserisci_ostacolo(my_map.crea_cella(15,20), my_map.crea_cella(40,40));
-	my_map.inserisci_ostacolo(my_map.crea_cella(0,0), my_map.crea_cella(1,2));
-	my_map.inserisci_ostacolo(my_map.crea_cella(-1000,-70), my_map.crea_cella(-50,-50));
+	std::ifstream infile{"../ros_ws/obstacle_positions.txt"};
+
+	while(!infile.eof())
+	{
+		double x_min, y_min, x_max, y_max;
+		infile >> x_min >> y_min >> x_max >> y_max;
+		if (infile.eof() || infile.fail() || infile.bad()) {
+            		std::cerr << "Error in input\n";
+            		break;
+       		}
+       		
+       		my_map.inserisci_ostacolo(my_map.crea_cella(x_min, y_min), my_map.crea_cella(x_max, y_max));
+       	}
 
 	Cella pos1 = Cella(-15, -15);
 	Cella pos2 = Cella(-26, 32);
 	Cella pos3 = Cella(7, 10);
-	
-	std::thread s1(processo_satellite, "../coordinate/stazione1.txt");
-	std::thread s2(processo_satellite, "../coordinate/stazione2.txt");
 
 	std::thread r1(processo_robot, pos1, 1.5);
 	std::thread r2(processo_robot, pos2, 0.6);
 	std::thread r3(processo_robot, pos3, 3);
 	
+	std::thread s1(processo_satellite, "../coordinate/stazione1.txt");
+	std::thread s2(processo_satellite, "../coordinate/stazione2.txt");
+	
 	s1.join();
 	s2.join();
+	
+	my_mon.finish();
+	
 	r1.join();
 	r2.join();
 	r3.join();
