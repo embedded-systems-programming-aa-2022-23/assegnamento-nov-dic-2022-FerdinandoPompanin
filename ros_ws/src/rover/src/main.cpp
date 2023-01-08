@@ -18,7 +18,6 @@ using std::mutex;
 #define k 1
 #define N 3
 #define r 0.2
-#define num_goal 3//questo è il numero di goal che ogni robot dovrà raggiungere
 
 rclcpp::Node::SharedPtr g_node;
 rclcpp::Publisher<rover_visualizer::msg::RoverPosition>::SharedPtr g_publisher;
@@ -39,7 +38,7 @@ void processo_robot(Cella pos, float raggio, int id)
 	
 	rover_.set_pos(my_robot.x_value(), my_robot.y_value());
 	
-	for(int i = 0; i < num_goal; i++){
+	while(!my_mon.order_to_stop()){
         	Cella value = my_mon.take(my_robot.valore_pos());
 		my_robot.cambia_goal(value);
 	
@@ -113,6 +112,9 @@ int main(int argc, char* argv[]) {
 	
 	s1.join();
 	s2.join();
+	
+	my_mon.finish();
+	
 	r1.join();
 	r2.join();
 	r3.join();

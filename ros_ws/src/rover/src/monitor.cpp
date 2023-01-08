@@ -21,8 +21,16 @@ void PC::append(datatype v){
 
 datatype PC::take(Cella pos){
 	std::unique_lock<std::mutex> mlock(mutex_);
-	while(count_ == 0)
+	while(count_ == 0 && !order_to_stop())
 		not_empty_.wait(mlock);
+		
+	//serve per uscire dal take se la thread deve morire
+	if(order_to_stop())
+	{
+		mlock.unlock();
+  		not_empty_.notify_one();//risveglio a cascata
+  		return pos;
+	}
 
 	auto min = buffer_.cbegin();
 	//scorro la lista per trovare goal a distanza minima
@@ -40,4 +48,19 @@ datatype PC::take(Cella pos){
   	not_full_.notify_one();
 
     return w;
+}
+
+
+void PC::finish(){
+
+	while(buffer_.size()!=0)
+	{}
+	
+	stop_ = true;
+	
+	not_empty_.notify_one();//questo serve a svegliare una thread robot ferma a not_empty.wait(mlock), le altre si rivegliano a cascata
+}
+
+bool PC::order_to_stop() const{
+	return stop_;
 }

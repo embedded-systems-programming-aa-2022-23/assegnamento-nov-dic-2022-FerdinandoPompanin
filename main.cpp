@@ -14,7 +14,6 @@ using std::mutex;
 
 #define k 1
 #define N 3
-#define num_goal 3//questo è il numero di goal che ogni robot dovrà raggiungere
 
 Mappa my_map(1.0);//globali perchè condivisa dai processi
 
