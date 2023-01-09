@@ -119,6 +119,7 @@ int main(int argc, char* argv[]) {
 	r2.join();
 	r3.join();
 	
+  rclcpp::spin(g_node);
   rclcpp::shutdown();
 
   exit(EXIT_SUCCESS);
