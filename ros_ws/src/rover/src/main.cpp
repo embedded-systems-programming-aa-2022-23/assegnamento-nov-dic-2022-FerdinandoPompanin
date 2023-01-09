@@ -52,7 +52,7 @@ void processo_robot(Cella pos, float raggio, int id)
 			mutex_mappa.unlock();
 		}
 		
-		cout << "Robot: "<< id << "ha raggiunto il Goal in pos: " << my_robot.valore_pos() << " \n";
+		cout << "Robot: "<< id << " ha raggiunto il Goal in pos: " << my_robot.valore_pos() << " \n";
 	}
 
 }

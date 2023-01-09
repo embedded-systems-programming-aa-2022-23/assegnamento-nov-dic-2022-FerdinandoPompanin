@@ -92,12 +92,12 @@ using std::pair;
 		Robot::cambia_pos(prox_cella);
 	}
 	
-	float x_value() const
+	float Robot::x_value() const
 	{
 		return (pos_.posx() * map_.dim_cella());
 	}
 	
-	float y_value() const
+	float Robot::y_value() const
 	{
 		return (pos_.posy() * map_.dim_cella());
 	}
