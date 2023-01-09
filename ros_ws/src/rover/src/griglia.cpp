@@ -58,8 +58,8 @@ using std::min_element;
 
 	Cella Mappa::crea_cella(float pos_x, float pos_y) const
 	{
-		int x = static_cast<int>(floor((pos_x/dim_)));
-		int y = static_cast<int>(floor((pos_y/dim_)));
+		int x = round(floor((pos_x/dim_)));
+		int y = round(floor((pos_y/dim_)));
 		
 		Cella my_cella(x, y);
 		
